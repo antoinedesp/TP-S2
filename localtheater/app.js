@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             if(mapReference !== null) {
                 addMapMarker(mapReference, theaterWithDistance.coordinates, 
                         `
-                        <div>
+                        <div class="rounded p-2 m-2 flex flex-col space-between">
                             <b>${theaterWithDistance.theater.nom}</b>
                             <i>${theaterWithDistance.theater.adresse.toLowerCase()}, ${theaterWithDistance.theater.commune}</i>
                             <i>${formatDistanceToString(theaterWithDistance.distance)}</i>
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 );
             }
             return `
-                    <div>
+                    <div class="px-8 py-2 m-2 card bg-white rounded-full flex flex-col space-between">
                         <b>${theaterWithDistance.theater.nom}</b>
                         <i>${theaterWithDistance.theater.adresse.toLowerCase()}, ${theaterWithDistance.theater.commune}</i>
                         <i>${formatDistanceToString(theaterWithDistance.distance)}</i>
