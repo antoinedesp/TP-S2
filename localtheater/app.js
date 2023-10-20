@@ -38,9 +38,9 @@ function getAddressFromCoords(coords) {
     });
 }
 
-function getTheatersFromCoords(coords) {
+function getTheatersFromCoords(coords, distance=10000) {
     return new Promise((resolve) => {
-        fetch(`${theatersBaseUrl}/?dataset=etablissements-cinematographiques&geofilter.distance=${coords.latitude},${coords.longitude},10000`).then(response => response.json()).then(response => {
+        fetch(`${theatersBaseUrl}/?dataset=etablissements-cinematographiques&geofilter.distance=${coords.latitude},${coords.longitude},${distance}`).then(response => response.json()).then(response => {
               resolve(response);
            });
    });
@@ -109,8 +109,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     
         moveTo(mapReference, userCoords);
-    
-        const theaters = await getTheatersFromCoords(userCoords);
+        
+        // Si l'utilisateur n'a pas entré de distance ou une valeur incorrecte, on assigne 10000m comme distance par défaut
+        const distance = 
+                    document.querySelector('#maximalDistance').value == null 
+                    || Number.isInteger(Number(document.querySelector('#maximalDistance').value)) == false
+                    || Number(document.querySelector('#maximalDistance').value) <= 0
+                    ? 10000
+                    : document.querySelector('#maximalDistance').value * 1000;
+
+        const theaters = await getTheatersFromCoords(userCoords, distance);
     
         console.log(theaters);
     
