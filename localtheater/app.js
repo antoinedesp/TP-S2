@@ -81,84 +81,84 @@ function moveTo(map, coords) {
     map.flyTo([coords.latitude, coords.longitude]);
 }
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    mapReference = initializeMap();
 
-document.querySelector('#geolocateMe').addEventListener('click', async (event) => {
-    event.preventDefault();
-
-    const coords = await getCoordsFromBrowser();
-    const address = await getAddressFromCoords(coords);
-    document.querySelector('#addressText').value = address;
-
-    moveTo(mapReference, userCoords);
-});
-
-document.querySelector('#submitForm').addEventListener('click', async (event) => {
-    event.preventDefault();
-
-    if(userCoords === null) {
-        const address = document.querySelector('#addressText').value;
-
-        if(address === null || address < 5) {
-            alert(`Merci d'entrer une adresse contenant plus de 5 caractères.`);
-            return;
-        }
-
-        userCoords = await getCoordsFromAddress(address);
-    }
-
-    moveTo(mapReference, userCoords);
-
-    const theaters = await getTheatersFromCoords(userCoords);
-
-    console.log(theaters);
-
-
-    // Source: https://stackoverflow.com/questions/26836146/how-to-sort-array-items-by-longitude-latitude-distance-in-javascripts
-
-    const distancedArray = [];
-
-    theaters.records.map((theater) => {
-        distancedArray.push(
-            {
-                distance: distanceBetweenCoords(userCoords, {
-                    latitude: theater.geometry.coordinates[1],
-                    longitude: theater.geometry.coordinates[0]
-                }),
-                coordinates: {
-                    latitude: theater.geometry.coordinates[1],
-                    longitude: theater.geometry.coordinates[0]
-                },
-                theater: theater.fields
+    document.querySelector('#geolocateMe').addEventListener('click', async (event) => {
+        event.preventDefault();
+    
+        const coords = await getCoordsFromBrowser();
+        const address = await getAddressFromCoords(coords);
+        document.querySelector('#addressText').value = address;
+    
+        moveTo(mapReference, userCoords);
+    });
+    
+    document.querySelector('#submitForm').addEventListener('click', async (event) => {
+        event.preventDefault();
+    
+        if(userCoords === null) {
+            const address = document.querySelector('#addressText').value;
+    
+            if(address === null || address < 5) {
+                alert(`Merci d'entrer une adresse contenant plus de 5 caractères ou de vous géolocaliser automatiquq.`);
+                return;
             }
-        );
-    });
-
-    distancedArray.sort(function(a, b) { 
-        return a.distance - b.distance;
-    });
-
-    document.querySelector('#searchResults').innerHTML = distancedArray.map((theaterWithDistance) => {
-        if(mapReference !== null) {
-            addMapMarker(mapReference, theaterWithDistance.coordinates, 
-                    `
+    
+            userCoords = await getCoordsFromAddress(address);
+        }
+    
+        moveTo(mapReference, userCoords);
+    
+        const theaters = await getTheatersFromCoords(userCoords);
+    
+        console.log(theaters);
+    
+    
+        // Source: https://stackoverflow.com/questions/26836146/how-to-sort-array-items-by-longitude-latitude-distance-in-javascripts
+    
+        const distancedArray = [];
+    
+        theaters.records.map((theater) => {
+            distancedArray.push(
+                {
+                    distance: distanceBetweenCoords(userCoords, {
+                        latitude: theater.geometry.coordinates[1],
+                        longitude: theater.geometry.coordinates[0]
+                    }),
+                    coordinates: {
+                        latitude: theater.geometry.coordinates[1],
+                        longitude: theater.geometry.coordinates[0]
+                    },
+                    theater: theater.fields
+                }
+            );
+        });
+    
+        distancedArray.sort(function(a, b) { 
+            return a.distance - b.distance;
+        });
+    
+        document.querySelector('#searchResults').innerHTML = distancedArray.map((theaterWithDistance) => {
+            if(mapReference !== null) {
+                addMapMarker(mapReference, theaterWithDistance.coordinates, 
+                        `
+                        <div>
+                            <b>${theaterWithDistance.theater.nom}</b>
+                            <i>${theaterWithDistance.theater.adresse.toLowerCase()}, ${theaterWithDistance.theater.commune}</i>
+                            <i>${formatDistanceToString(theaterWithDistance.distance)}</i>
+                        </div>
+                        `
+                );
+            }
+            return `
                     <div>
                         <b>${theaterWithDistance.theater.nom}</b>
                         <i>${theaterWithDistance.theater.adresse.toLowerCase()}, ${theaterWithDistance.theater.commune}</i>
                         <i>${formatDistanceToString(theaterWithDistance.distance)}</i>
                     </div>
-                    `
-            );
-        }
-        return `
-                <div>
-                    <b>${theaterWithDistance.theater.nom}</b>
-                    <i>${theaterWithDistance.theater.adresse.toLowerCase()}, ${theaterWithDistance.theater.commune}</i>
-                    <i>${formatDistanceToString(theaterWithDistance.distance)}</i>
-                </div>
-                `;
-    }).join('');
-});
+                    `;
+        }).join('');
+    });
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    mapReference = initializeMap();
 });
