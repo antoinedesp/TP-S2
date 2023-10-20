@@ -62,7 +62,7 @@ function distanceBetweenCoords(coords1, coords2) {
 
     const d = R * c; // in metres
 
-    return d
+    return d;
 }
 
 function initializeMap() {
@@ -97,6 +97,12 @@ document.querySelector('#submitForm').addEventListener('click', async (event) =>
 
     if(userCoords === null) {
         const address = document.querySelector('#addressText').value;
+
+        if(address === null || address < 5) {
+            alert(`Merci d'entrer une adresse contenant plus de 5 caractères.`);
+            return;
+        }
+
         userCoords = await getCoordsFromAddress(address);
     }
 
