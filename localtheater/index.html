@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trouver un cinéma</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+    <script src="app.js" type="module"></script>
+</head>
+<body>
+    <div class="mx-auto w-4/5 md:w-1/3 lg:w-1/4">
+        <form id="searchForm" action="">
+            <input id="addressText" type="text" class="border bg-black text-white p-2 m-2 w-full" placeholder="Entrer mon adresse"/>
+            <button id="submitForm" class="border bg-black text-white p-2 m-2 w-full">Rechercher</button>
+            <button id="geolocateMe" class="border bg-black text-white p-2 m-2 w-full">Me géolocaliser</button>
+        </form>
+    </div>
+
+    <div id="searchResults" class="flex flex-row justify-between mx-auto w-4/5 md:w-2/3 lg:w-1/2">
+        
+    </div>
+
+    <div id="map" class="mx-auto" style="width:600px; height: 600px;">
+
+    </div>
+
+</body>
+</html>
